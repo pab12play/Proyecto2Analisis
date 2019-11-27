@@ -15,10 +15,13 @@ df = pd.read_excel(file,encoding = "iso-8859-1")
 df = df.drop(df.columns[0], axis=1) #elimina la columna vacia
 df = df.rename(columns={"año" : 'anio'}) #renombra 
 
-
-def cursosNumericos():
-    
-
+cursosNumericos = pd.DataFrame()
+cursosEspecificos = pd.DataFrame()
+cursosProfesionales = pd.DataFrame()
+cursosCFI = pd.DataFrame()
+cursosGanados = pd.DataFrame()
+cursosPerdidos = pd.DataFrame()
+cursosCompletos = pd.DataFrame()
 
 for index1, row in df.iterrows():
     #leer archivo de notas de cada estudiante
@@ -32,10 +35,30 @@ for index1, row in df.iterrows():
     df2['ID'] = row['ID']
     
     mergedDf = df.merge(df2)
+    mergedDf = mergedDf.drop(mergedDf[mergedDf.Nombre_Curso.str.contains('INGLES', na=False)].index) #ELIMINA INGLES
+    mergedDf = mergedDf.dropna(subset=['Nota']) #ELIMINA NOTAS VACIAS
+    mergedDf = mergedDf.drop(mergedDf[mergedDf.Nota.astype(str).str.contains('A', na=False)].index) #ELIMINA NOTAS INVALIDAD
+    mergedDf = mergedDf.drop(mergedDf[mergedDf.Nota.astype(str).str.contains('E', na=False)].index) #ELIMINA NOTAS INVALIDAD
+    mergedDf = mergedDf.drop(mergedDf[mergedDf.Nota.astype(str).str.contains('R', na=False)].index) #ELIMINA NOTAS INVALIDAD
 
-    if not os.path.exists('DataSets/'):
-        os.makedirs('DataSets/')
-    mergedDf.to_csv('DataSets/'+str(row['ID'])+'.csv', index=False)
+    cursosCFI = cursosCFI.append(mergedDf.loc[mergedDf.Nombre_Curso.str.contains('(CFI)', na=False)])
+    cursosNumericos = cursosNumericos.append(mergedDf.loc[mergedDf.Eje.astype(str).str.contains('CIENCIAS BASICAS', na=False)])
+    cursosEspecificos = cursosEspecificos.append(mergedDf.loc[mergedDf.Eje.astype(str).str.contains('CIENCAS DE INGENIERIA', na=False) | mergedDf.Eje.astype(str).str.contains('APLICADA', na=False)])
+    cursosProfesionales = cursosProfesionales.append(mergedDf.loc[mergedDf.Eje.astype(str).str.contains('PROFESIONAL', na=False)])
+    cursosGanados = cursosGanados.append(mergedDf.loc[mergedDf.Nota.astype(int) >= 65])
+    cursosPerdidos = cursosPerdidos.append(mergedDf.loc[mergedDf.Nota.astype(int) < 65])
 
-    #leemos cada registro del usuario, y vemos a que datasets corresponde
+    cursosCompletos = cursosCompletos.append(mergedDf)
+    
+if not os.path.exists('DataSets/'):
+    os.makedirs('DataSets/')
+
+cursosCFI.to_csv('DataSets/cursosCFI.csv', index=False)
+cursosNumericos.to_csv('DataSets/cursosNumericos.csv', index=False)
+cursosEspecificos.to_csv('DataSets/cursosEspecificos.csv', index=False)
+cursosProfesionales.to_csv('DataSets/cursosProfesionales.csv', index=False)
+cursosGanados.to_csv('DataSets/cursosGanados.csv', index=False)
+cursosPerdidos.to_csv('DataSets/cursosPerdidos.csv', index=False)
+cursosCompletos.to_csv('DataSets/cursosCompletos.csv', index=False)
+
 
