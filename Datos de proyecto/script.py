@@ -9,13 +9,17 @@ if not os.path.exists('DataSets/'):
 
 #leer listadoPromedios
 file = r'ListadoPromedios.xlsx'
-df = pd.read_excel(file,encoding = "ISO-8859-1")
+df = pd.read_excel(file,encoding = "iso-8859-1")
 
-for index, row in df.iterrows():
+
+df = df.drop(df.columns[0], axis=1) #elimina la columna vacia
+df = df.rename(columns={"año" : 'anio'}) #renombra 
+
+for index1, row in df.iterrows():
     #leer archivo de notas de cada estudiante
     file = r'Notas/'+str(row['ID'])+'.csv'
     try:
-        df2 = pd.read_csv(file,encoding = "ISO-8859-1")
+        df2 = pd.read_csv(file,encoding = "iso-8859-1")
     except FileNotFoundError:
         print("El archivo "+str(row['ID'])+".csv , No existe")
         continue
@@ -25,6 +29,6 @@ for index, row in df.iterrows():
     mergedDf = df.merge(df2)
     if not os.path.exists('DataSets/'):
         os.makedirs('DataSets/')
-    mergedDf.to_csv('DataSets/'+str(row['ID'])+'.csv')
+    mergedDf.to_csv('DataSets/'+str(row['ID'])+'.csv', index=False)
 
 
