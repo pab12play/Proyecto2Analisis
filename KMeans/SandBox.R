@@ -6,6 +6,7 @@ library("factoextra")
 
 #install.packages("gridExtra")
 library("gridExtra")
+
 #install.packages("ggplot2")
 library(ggplot2)
 
@@ -16,13 +17,13 @@ my_data <- read_excel("ProjectData/ListadoPromedios.xlsx")
 set.seed(23544727)
 
 #Plot de promedio simple por anio
-ggplot() + geom_point(aes(x = my_data$año, y =  (my_data$prom_simp_x_ciclo)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos')
+ggplot() + geom_point(aes(x = my_data$año, y =  (my_data$Promedio_Simple_Acumulado)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos')
 
 #Plot de promedio ponderado por anio
-ggplot() + geom_point(aes(x = my_data$año, y =  (my_data$prom_pond_x_ciclo)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos')
+ggplot() + geom_point(aes(x = my_data$año, y =  (my_data$Promedio_Ponderado_Acumulado)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos')
 
-#Plot de promedio ponderado por anio
-ggplot() + geom_point(aes(x = my_data$año, y =  (my_data$prom_simp_x_ciclo)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos')
+#Box diagram de promedio ponderado por anio
+ggplot() + geom_boxplot(aes(x = my_data$año, y =  (my_data$Promedio_Ponderado_Acumulado)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos')
 
 
 #Promedio simple x numero de cursos 

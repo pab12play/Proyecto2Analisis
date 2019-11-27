@@ -15,6 +15,11 @@ df = pd.read_excel(file,encoding = "iso-8859-1")
 df = df.drop(df.columns[0], axis=1) #elimina la columna vacia
 df = df.rename(columns={"año" : 'anio'}) #renombra 
 
+
+def cursosNumericos():
+    
+
+
 for index1, row in df.iterrows():
     #leer archivo de notas de cada estudiante
     file = r'Notas/'+str(row['ID'])+'.csv'
@@ -27,8 +32,10 @@ for index1, row in df.iterrows():
     df2['ID'] = row['ID']
     
     mergedDf = df.merge(df2)
+
     if not os.path.exists('DataSets/'):
         os.makedirs('DataSets/')
     mergedDf.to_csv('DataSets/'+str(row['ID'])+'.csv', index=False)
 
+    #leemos cada registro del usuario, y vemos a que datasets corresponde
 
