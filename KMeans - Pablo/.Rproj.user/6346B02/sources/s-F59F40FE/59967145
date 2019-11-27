@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1573942220486.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "59967145",
+    "lastKnownWriteTime" : 1574737066,
+    "last_content_update" : 1574737334741,
+    "path" : "D:/Documents/Universidad/Octavo ciclo/ANÁLISIS DE DATOS/Proyecto2/Proyecto2/SandBox.R",
+    "project_path" : "SandBox.R",
+    "properties" : {
+        "cursorPosition" : "44,0",
+        "scrollLine" : "26",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
