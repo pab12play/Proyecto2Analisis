@@ -19,17 +19,17 @@ set.seed(23544727)
 
 #Plot de promedio simple por anio
 pdf("KMeans/Plots/PromedioSimplePorAnio.pdf", width=22, height=12)
-ggplot() + geom_point(aes(x = my_data$año, y =  (my_data$Promedio_Simple_Acumulado)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos')
+ggplot() + geom_point(aes(x = my_data$año, y =  (my_data$Promedio_Simple_Acumulado)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos') + labs(colour = "Cylinders") + labs(x = "Anio") + labs(y = "Promedio Ponderado")
 dev.off()
 
 #Plot de promedio ponderado por anio
 pdf("KMeans/Plots/PromedioPondPorAnio.pdf", width=22, height=12)
-ggplot() + geom_point(aes(x = my_data$año, y =  (my_data$Promedio_Ponderado_Acumulado)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos')
+ggplot() + geom_point(aes(x = my_data$año, y =  (my_data$Promedio_Ponderado_Acumulado)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos')  + labs(colour = "Cylinders") + labs(x = "Anio") + labs(y = "Promedio Ponderado")
 dev.off()
 
 #Box diagram de promedio ponderado por anio
 pdf("KMeans/Plots/PromedioPondPorAnioBox.pdf", width=20, height=12)
-ggplot() + geom_boxplot(aes(x = my_data$año, y =  (my_data$Promedio_Ponderado_Acumulado)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos')
+ggplot() + geom_boxplot(aes(x = my_data$año, y =  (my_data$Promedio_Ponderado_Acumulado)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos')  + labs(colour = "Cylinders") + labs(x = "Anio") + labs(y = "Promedio Ponderado")
 dev.off()
 
 #Promedio simple x numero de cursos 
