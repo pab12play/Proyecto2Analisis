@@ -46,8 +46,8 @@ dev.off()
 
 PromedioPonderado = my_data[, c("Promedio_Ponderado_Acumulado", "cursos_acumulados")]
 row.names(PromedioPonderado) = my_data$ID
-nclustersPromPond = fviz_nbclust(PromedioPonderado, kmeans, method = "wss") + geom_vline(xintercept = 4, linetype = 2) + ggtitle("N?mero ?ptimo de clusters") 
-clustersPromPond = kmeans(PromedioPonderado, 4, nstart = 100)
+nclustersPromPond = fviz_nbclust(PromedioPonderado, kmeans, method = "wss") + geom_vline(xintercept = 3, linetype = 2) + ggtitle("N?mero ?ptimo de clusters") 
+clustersPromPond = kmeans(PromedioPonderado, 3, nstart = 100)
 graficakPromPond = fviz_cluster(clustersPromPond, data = PromedioPonderado) + ggtitle("Promedio acomulado x N?meroo de cursos") +  labs(x = "Promedio ponderado", y = "Total cursos")
 save(PromedioPonderado, file = "KMeans/Data/PromedioPonderado.RData")
 pdf("KMeans/Plots/PromedioPond.pdf", width=30, height=50)
@@ -68,9 +68,9 @@ dev.off()
 promedioCursoCFI = read.csv("ProjectData/promedioCursoCFI.csv", header = TRUE)
 promedioCursoCFI = promedioCursoCFI[, c("Cursos", "Promedio")]
 row.names(promedioCursoCFI) = promedioCursoCFI$ID
-nClustersPromCFI = fviz_nbclust(promedioCursoCFI, kmeans, method = "wss") + geom_vline(xintercept = 6, linetype = 2) + ggtitle("Numero optimo de clusters")
-clustersPromCFI = kmeans(promedioCursoCFI, 6, nstart = 30)
-graficakPromCFI = fviz_cluster(clustersPromCFI, data = promedioCursoCFI) + ggtitle("Promedio cursos CFI x Numero de cursos") +  labs(x = "Cursos", y = "Promedio Cursos CFI")
+nClustersPromCFI = fviz_nbclust(promedioCursoCFI, kmeans, method = "wss") + geom_vline(xintercept = 7, linetype = 2) + ggtitle("Numero optimo de clusters")
+clustersPromCFI = kmeans(promedioCursoCFI, 7, nstart = 30)
+  graficakPromCFI = fviz_cluster(clustersPromCFI, data = promedioCursoCFI) + ggtitle("Promedio cursos CFI x Numero de cursos") +  labs(x = "Cursos", y = "Promedio Cursos CFI")
 save(promedioCursoCFI, file = "KMeans/Data/promedioCursoCFI.RData")
 pdf("KMeans/Plots/PromedioCFI.pdf", width=30, height=50)
 grid.arrange(graficakPromCFI, nClustersPromCFI, nrow = 2)
@@ -104,8 +104,8 @@ promedioCursoProfecionales = read.csv("ProjectData/promedioCursosProfecionales.c
 promedioCursoProfecionales = promedioCursoProfecionales[, c("Cursos", "Promedio")]
 row.names(promedioCursoProfecionales) = promedioCursoProfecionales$ID
 nClustersPromProfecionales = fviz_nbclust(promedioCursoProfecionales, kmeans, method = "wss") + geom_vline(xintercept = 4, linetype = 2) + ggtitle("Numero optimo de clusters")
-clustersPromProfecionales = kmeans(promedioCursoProfecionales, 4, nstart = 30)
-graficakPromProfecionales = fviz_cluster(clustersPromProfecionales, data = promedioCursoProfecionales) + ggtitle("Promedio cursos area Profecional x Numero de cursos") +  labs(x = "Cursos", y = "Promedio Cursos profecionales")
+clustersPromProfecionales = kmeans(promedioCursoProfecionales, 5, nstart = 30)
+graficakPromProfecionales = fviz_cluster(clustersPromProfecionales, data = promedioCursoProfecionales) + ggtitle("Promedio cursos area Profesional x Numero de cursos") +  labs(x = "Cursos", y = "Promedio Cursos profesionales")
 save(promedioCursoProfecionales, file = "KMeans/Data/promedioCursoProfecionales.RData")
 pdf("KMeans/Plots/PromedioProfecionales.pdf", width=30, height=50)
 grid.arrange(graficakPromProfecionales, nClustersPromCFI, nrow = 2)
