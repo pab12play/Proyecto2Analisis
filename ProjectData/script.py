@@ -67,3 +67,4 @@ cursosPerdidos.to_csv('DataSets/cursosPerdidos.csv', index=False)
 cursosCompletos.to_csv('DataSets/cursosCompletos.csv', index=False)
 
 
+
