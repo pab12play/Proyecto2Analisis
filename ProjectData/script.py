@@ -41,13 +41,18 @@ for index1, row in df.iterrows():
     mergedDf = mergedDf.drop(mergedDf[mergedDf.Nota.astype(str).str.contains('E', na=False)].index) #ELIMINA NOTAS INVALIDAD
     mergedDf = mergedDf.drop(mergedDf[mergedDf.Nota.astype(str).str.contains('R', na=False)].index) #ELIMINA NOTAS INVALIDAD
 
+    #cambiar nombre de columnas
+    mergedDf.loc[mergedDf.Nombre_Ciclo.str.contains('Primer', na=False), 'Nombre_Ciclo'] = 'Primer Ciclo'
+    mergedDf.loc[mergedDf.Nombre_Ciclo.str.contains('Segundo', na=False),  'Nombre_Ciclo'] = 'Segundo Ciclo'
+    mergedDf.loc[mergedDf.Nombre_Ciclo.str.contains('Interciclo', na=False),  'Nombre_Ciclo'] = 'Interciclo'
+
     cursosCFI = cursosCFI.append(mergedDf.loc[mergedDf.Nombre_Curso.str.contains('(CFI)', na=False)])
     cursosNumericos = cursosNumericos.append(mergedDf.loc[mergedDf.Eje.astype(str).str.contains('CIENCIAS BASICAS', na=False)])
     cursosEspecificos = cursosEspecificos.append(mergedDf.loc[mergedDf.Eje.astype(str).str.contains('CIENCAS DE INGENIERIA', na=False) | mergedDf.Eje.astype(str).str.contains('APLICADA', na=False)])
     cursosProfesionales = cursosProfesionales.append(mergedDf.loc[mergedDf.Eje.astype(str).str.contains('PROFESIONAL', na=False)])
     cursosGanados = cursosGanados.append(mergedDf.loc[mergedDf.Nota.astype(int) >= 65])
     cursosPerdidos = cursosPerdidos.append(mergedDf.loc[mergedDf.Nota.astype(int) < 65])
-
+    cursosPerdidos = cursosPerdidos.drop_duplicates(subset=['ID', 'No_curso'])
     cursosCompletos = cursosCompletos.append(mergedDf)
     
 if not os.path.exists('DataSets/'):
