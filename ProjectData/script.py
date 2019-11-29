@@ -16,8 +16,14 @@ df = df.drop(df.columns[0], axis=1) #elimina la columna vacia
 df = df.rename(columns={"año" : 'anio'}) #renombra 
 
 cursosNumericos = pd.DataFrame()
+cursosNumericosGanados = pd.DataFrame()
+cursosNumericosPerdidos = pd.DataFrame()
 cursosEspecificos = pd.DataFrame()
+cursosEspecificosGanados = pd.DataFrame()
+cursosEspecificosPerdidos = pd.DataFrame()
 cursosProfesionales = pd.DataFrame()
+cursosProfesionalesGanados = pd.DataFrame()
+cursosProfesionalesPerdidos = pd.DataFrame()
 cursosCFI = pd.DataFrame()
 cursosGanados = pd.DataFrame()
 cursosPerdidos = pd.DataFrame()
@@ -71,14 +77,30 @@ for index1, row in df.iterrows():
     conteoCursosPerdidos = conteoCursosPerdidos.append(df.merge(conteoCursosPerdidos))
 
     cursosCompletos = cursosCompletos.append(mergedDf)
-    
+
+
+cursosNumericosGanados = cursosNumericosGanados.append(cursosGanados.loc[cursosGanados.Eje.astype(str).str.contains('CIENCIAS BASICAS', na=False)])  
+cursosNumericosPerdidos = cursosNumericosPerdidos.append(cursosPerdidos.loc[cursosPerdidos.Eje.astype(str).str.contains('CIENCIAS BASICAS', na=False)])
+
+cursosEspecificosGanados = cursosEspecificosGanados.append(cursosGanados.loc[cursosGanados.Eje.astype(str).str.contains('CIENCIAS BASICAS', na=False)])  
+cursosEspecificosPerdidos = cursosEspecificosPerdidos.append(cursosPerdidos.loc[cursosPerdidos.Eje.astype(str).str.contains('CIENCIAS BASICAS', na=False)]) 
+
+cursosProfesionalesGanados = cursosProfesionalesGanados.append(cursosGanados.loc[cursosGanados.Eje.astype(str).str.contains('CIENCIAS BASICAS', na=False)])  
+cursosProfesionalesPerdidos = cursosProfesionalesPerdidos.append(cursosPerdidos.loc[cursosPerdidos.Eje.astype(str).str.contains('CIENCIAS BASICAS', na=False)]) 
+
 if not os.path.exists('DataSets/'):
     os.makedirs('DataSets/')
 
 cursosCFI.to_csv('DataSets/cursosCFI.csv', index=False)
 cursosNumericos.to_csv('DataSets/cursosNumericos.csv', index=False)
+cursosNumericosGanados.to_csv('DataSets/cursosNumericosGanados.csv', index=False)
+cursosNumericosPerdidos.to_csv('DataSets/cursosNumericosPerdidos.csv', index=False)
 cursosEspecificos.to_csv('DataSets/cursosEspecificos.csv', index=False)
+cursosEspecificosGanados.to_csv('DataSets/cursosEspecificosGanados.csv', index=False)
+cursosEspecificosPerdidos.to_csv('DataSets/cursosEspecificosPerdidos.csv', index=False)
 cursosProfesionales.to_csv('DataSets/cursosProfesionales.csv', index=False)
+cursosProfesionalesGanados.to_csv('DataSets/cursosProfesionalesGanados.csv', index=False)
+cursosProfesionalesPerdidos.to_csv('DataSets/cursosProfesionalesPerdidos.csv', index=False)
 cursosGanados.to_csv('DataSets/cursosGanados.csv', index=False)
 cursosPerdidos.to_csv('DataSets/cursosPerdidos.csv', index=False)
 conteoCursosPerdidos.to_csv('DataSets/conteoCursosPerdidos.csv', index=False)
