@@ -1,5 +1,6 @@
 #install.packages("readxl")
 library("readxl")
+library(readr)
 
 #install.packages("factoextra")
 library("factoextra")
@@ -9,72 +10,41 @@ library("gridExtra")
 
 #install.packages("ggplot2")
 library(ggplot2)
+library(tidyverse)
 
-setwd("C:/Users/Abraham/Desktop/Proyecto2Analisis") #comentar y agregar sus rutas
-setwd("D:/Documents/Universidad/Octavo ciclo/ANÁLISIS DE DATOS/Proyecto2/Proyecto2Analisis")
+#setwd("C:/Users/Abraham/Desktop/Proyecto2Analisis") #comentar y agregar sus rutas
+#setwd("D:/Documents/Universidad/Octavo ciclo/ANÁLISIS DE DATOS/Proyecto2/Proyecto2Analisis")
+setwd("/home/akabane/Desktop/Proyecto2Analisis")
 
 # xlsx files
 my_data <- read_excel("ProjectData/ListadoPromedios.xlsx")
+dataCompletos <- read_csv("ProjectData/DataSets/cursosCompletos.csv")
+dataCursosAprobados <- read_csv("ProjectData/DataSets/ListadoPromedios.csv")
+dataCursosPerdidos <- read_csv("ProjectData//DataSets/conteoCursosPerdidos.csv")
 set.seed(23544727)
 
-#Plot de promedio simple por anio
-pdf("KMeans/Plots/PromedioSimplePorAnio.pdf", width=22, height=12)
-ggplot() + geom_point(aes(x = my_data$año, y =  (my_data$Promedio_Simple_Acumulado)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos') + labs(colour = "Cylinders") + labs(x = "Anio") + labs(y = "Promedio Ponderado")
-dev.off()
 
-#Plot de promedio ponderado por anio
-pdf("KMeans/Plots/PromedioPondPorAnio.pdf", width=22, height=12)
-ggplot() + geom_point(aes(x = my_data$año, y =  (my_data$Promedio_Ponderado_Acumulado)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos')  + labs(colour = "Cylinders") + labs(x = "Anio") + labs(y = "Promedio Ponderado")
-dev.off()
+#CursosAprobados = dataCursosAprobados[c(1,6:8,11,18,20,22:23,26:27,29)]
+CursosAprobados = dataCursosAprobados[c("prom_simp_x_ciclo","cursos_x_ciclo","cursos_acumulados")]
+CursosAprobadosScale <- scale(CursosAprobados)
+nClustersCursosAprobados = fviz_nbclust(CursosAprobadosScale, kmeans, method = "wss") + geom_vline(xintercept = 4, linetype = 2) + ggtitle("Numero optimo de clusters")
+clustersCursosAprobados = kmeans(CursosAprobadosScale, 4, nstart = 30)
+graficakCursosAprobados = fviz_cluster(clustersCursosAprobados, data = CursosAprobadosScale) + ggtitle("Similitud en cursos aprobados")
+aggregate(CursosAprobados,by=list(clustersCursosAprobados$cluster),mean)
 
-#Box diagram de promedio ponderado por anio
-pdf("KMeans/Plots/PromedioPondPorAnioBox.pdf", width=20, height=12)
-ggplot() + geom_boxplot(aes(x = my_data$año, y =  (my_data$Promedio_Ponderado_Acumulado)), data = my_data, alpha = 0.5) + ggtitle('Conjunto de Datos')  + labs(colour = "Cylinders") + labs(x = "Anio") + labs(y = "Promedio Ponderado")
-dev.off()
+CursosPerdidos = dataCursosPerdidos[c("prom_simp_x_ciclo","cursos_x_ciclo","cursos_acumulados")]
+CursosPerdidosScale <- scale(CursosPerdidos)
+nClustersCursosPerdidos = fviz_nbclust(CursosPerdidosScale, kmeans, method = "wss") + geom_vline(xintercept = 4, linetype = 2) + ggtitle("Numero optimo de clusters")
+clustersCursosPerdidos = kmeans(CursosPerdidosScale, 3, nstart = 30)
+graficakCursosPerdidos = fviz_cluster(clustersCursosPerdidos, data = CursosPerdidosScale) + ggtitle("Similitud en cursos Perdidos")
+aggregate(CursosPerdidos,by=list(clustersCursosPerdidos$cluster),mean)
 
-#Promedio simple x numero de cursos 
-PromedioSimple = my_data[,c("prom_simp_x_ciclo", "cursos_acumulados")]
-row.names(PromedioSimple) = my_data$ID
-nclustersPromSimp = fviz_nbclust(PromedioSimple, kmeans, method = "wss") + geom_vline(xintercept = 3 ,linetype = 2) + ggtitle("N?mero ?ptimo de clusters")
-clustersPromSimp = kmeans(PromedioSimple, 3, nstart = 20)
-graficakPromSimp = fviz_cluster(clustersPromSimp, data = PromedioSimple) + ggtitle("Promedio Simple x Numero de cursos")
-save(PromedioSimple, file = "KMeans/Data/PromedioSimple.RData")
-pdf("KMeans/Plots/PromedioSimple.pdf", width=30, height=50)
-grid.arrange(graficakPromSimp, nclustersPromSimp, nrow = 2)
-dev.off()
-
-
-PromedioPonderado = my_data[, c("Promedio_Ponderado_Acumulado", "cursos_acumulados")]
-row.names(PromedioPonderado) = my_data$ID
-nclustersPromPond = fviz_nbclust(PromedioPonderado, kmeans, method = "wss") + geom_vline(xintercept = 4, linetype = 2) + ggtitle("N?mero ?ptimo de clusters")
-clustersPromPond = kmeans(PromedioPonderado, 4, nstart = 100)
-graficakPromPond = fviz_cluster(clustersPromPond, data = PromedioPonderado) + ggtitle("Promedio acomulado x N?meroo de cursos")
-save(PromedioPonderado, file = "KMeans/Data/PromedioPonderado.RData")
-pdf("KMeans/Plots/PromedioPond.pdf", width=30, height=50)
-grid.arrange(graficakPromPond, nclustersPromPond, nrow = 2)
-dev.off()
-
-PromedioAno = my_data[, c("año", "prom_simp_x_ciclo")]
-PromedioAno$año = as.numeric(as.character(PromedioAno$año))
-row.names(PromedioAno) = my_data$ID
-nClustersPromAno = fviz_nbclust(PromedioAno, kmeans, method = "wss") + geom_vline(xintercept = 3, linetype = 2) + ggtitle("N?mero ?ptimo de clusters")
-clustersPromAno = kmeans(PromedioAno, 3, nstart = 30)
-graficakPromAno = fviz_cluster(clustersPromAno, data = PromedioAno) + ggtitle("Promedio acomulado x A?o (No relevante)")
-save(PromedioAno, file = "KMeans/Data/PromedioAnio.RData")
-pdf("KMeans/Plots/PromedioAni.pdf", width=30, height=50)
-grid.arrange(graficakPromAno, nClustersPromAno, nrow = 2)
-dev.off()
-
-
-
-
-
-
-
-
-
-
-
+porTipoExamen = dataCompletos[c("No_tip_examen","Nota")]
+porTipoExamenScale <- scale(porTipoExamen)
+nClustersTipoExamen = fviz_nbclust(porTipoExamenScale, kmeans, method = "wss") + geom_vline(xintercept = 3, linetype = 2) + ggtitle("Numero optimo de clusters")
+clustersTipoExamen = kmeans(porTipoExamenScale, 3, nstart = 30)
+graficakTipoExamen = fviz_cluster(clustersTipoExamen, data = porTipoExamenScale) + ggtitle("Similitud por Tipo de Examen")
+aggregate(porTipoExamen,by=list(clustersTipoExamen$cluster),mean)
 
 
 
