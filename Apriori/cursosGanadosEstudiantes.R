@@ -10,6 +10,9 @@ library("gridExtra")
 #install.packages("ggplot2")
 library(ggplot2)
 
+#install.packages('Matrix')
+library('Matrix')
+
 #install.packages('arules')
 library('arules')
 
@@ -25,7 +28,7 @@ setwd("C:/Users/Abraham/Desktop/Proyecto2Analisis") #comentar y agregar sus ruta
 # leemos el CSV como transacciones
 # estas transacciones se realizan en base a
 # USUARIO y CURSOS 
-transacciones <- read.transactions("ProjectData/DataSets/cursosPerdidos.csv", rm.duplicates = FALSE,format="single",sep=",", header = TRUE,cols=c('ID', 'Nombre_Curso'))
+transacciones <- read.transactions("ProjectData/DataSets/cursosGanados.csv", rm.duplicates = FALSE,format="single",sep=",", header = TRUE,cols=c('ID', 'Nombre_Curso'))
 summary(transacciones)
 
 
@@ -50,7 +53,8 @@ frecuenciaImage <-  ggplot(data = head(frecuencia_items, 15), aes(x = reorder(xx
                     coord_flip() +
                     geom_hline(yintercept = 0, alpha = 1, color="black", size=0.5) +
                     geom_vline(xintercept = 0, alpha = 1, color="black", size=0.5) +
-                    labs(title = "Distribución de cursos perdidos",x = 'Cursos', y = 'Cantidad de Estudiantes') #+ theme(axis.text.x = element_text(angle = 90))
+                    labs(title = "Distribución de cursos ganados",x = 'Cursos', y = 'Cantidad de Estudiantes') #+ theme(axis.text.x = element_text(angle = 90))
+
   
 #distribucion de cursos perdidos
 frecuencia_items <- itemFrequency(x = transacciones, type = "absolute")
@@ -61,11 +65,11 @@ distribucionImage <- ggplot(distribucion) + aes(x =  seq(0,1,0.1), y = distribuc
                       scale_y_continuous(breaks=round(distribucion), labels = round(distribucion)) +
                       geom_hline(yintercept = 0, alpha = 1, color="black", size=0.5) +
                       geom_vline(xintercept = 0, alpha = 1, color="black", size=0.5) +
-                      labs(title = "Proporción de cursos perdidos",
-                           x = "Proporción", y = 'Cursos Perdidos')
+                      labs(title = "Proporción de cursos ganados",
+                           x = "Proporción", y = 'Ganados')
 
 #carguemos algunas reglas
-soporte <- 0.02
+soporte <- 0.3
 confianza <- 0.90
 
 reglas <- apriori(transacciones,parameter=list(sup=soporte,conf=confianza,target="rules", maxlen=3))
@@ -74,25 +78,25 @@ reglas_ordenadas_confidence = sort(x=reglas, decreasing = TRUE, by = "confidence
 reglas_ordenadas_lift = sort(x=reglas, decreasing = TRUE, by = "lift")
 #plot (reglas, method = "two-key plot")
 
-inspect(reglas_ordenadas_lift[0:10])
+inspect(reglas_ordenadas_lift[0:25])
 
 
 #guardamos los datos leidos
-save(transacciones, file = "Apriori/Data/cursosPerdidosEstudiantes.RData")
+save(transacciones, file = "Apriori/Data/cursosGanadosEstudiantes.RData")
 
 #guardamos las reglas calculadas
-save(reglas, file = paste0("Apriori/Data/cursosPerdidosEstudiantesReglas_Soporte-",(soporte),"_Confianza-",(confianza),".RData"))
+save(reglas, file = paste0("Apriori/Data/cursosGanadosEstudiantes_Soporte-",(soporte),"_Confianza-",(confianza),".RData"))
 
 #guardar imagenes
-jpeg("Apriori/Plots/cursosPerdidosEstudiantesTransacciones.jpg", width=800, height=800)
+jpeg("Apriori/Plots/cursosGanadosEstudiantesTransacciones.jpg", width=800, height=800)
 transaccionesImage
 dev.off()
 
-jpeg("Apriori/Plots/cursosPerdidosEstudiantesFrecuencias.jpg", width=900, height=600)
+jpeg("Apriori/Plots/cursosGanadosEstudiantesFrecuencias.jpg", width=900, height=600)
 frecuenciaImage
 dev.off()
 
-jpeg("Apriori/Plots/cursosPerdidosEstudiantesDistribuciones.jpg", width=800, height=800)
+jpeg("Apriori/Plots/cursosGanadosEstudiantesDistribuciones.jpg", width=800, height=800)
 distribucionImage
 dev.off()
 
