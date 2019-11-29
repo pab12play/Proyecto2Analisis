@@ -43,6 +43,10 @@ pdf("KMeans/Plots/PromedioSimple.pdf", width=30, height=50)
 grid.arrange(graficakPromSimp, nclustersPromSimp, nrow = 2)
 dev.off()
 
+str(PromedioSimple)
+TEMP <- as.data.frame(PromedioSimple)
+str(TEMP)
+save(TEMP, file = "KMeans/Data/PromedioSimple.rda")
 
 PromedioPonderado = my_data[, c("Promedio_Ponderado_Acumulado", "cursos_acumulados")]
 row.names(PromedioPonderado) = my_data$ID
@@ -53,6 +57,11 @@ save(PromedioPonderado, file = "KMeans/Data/PromedioPonderado.RData")
 pdf("KMeans/Plots/PromedioPond.pdf", width=30, height=50)
 grid.arrange(graficakPromPond, nclustersPromPond, nrow = 2)
 dev.off()
+
+str(PromedioPonderado)
+TEMP <- as.data.frame(PromedioPonderado)
+str(TEMP)
+save(TEMP, file = "KMeans/Data/PromedioPonderado.rda")
 
 PromedioAno = my_data[, c("año", "prom_simp_x_ciclo")]
 PromedioAno$año = as.numeric(as.character(PromedioAno$año))
@@ -65,6 +74,11 @@ pdf("KMeans/Plots/PromedioAni.pdf", width=30, height=50)
 grid.arrange(graficakPromAno, nClustersPromAno, nrow = 2)
 dev.off()
 
+str(PromedioAno)
+TEMP <- as.data.frame(PromedioAno)
+str(TEMP)
+save(TEMP, file = "KMeans/Data/PromedioAnio.rda")
+
 promedioCursoCFI = read.csv("ProjectData/promedioCursoCFI.csv", header = TRUE)
 row.names(promedioCursoCFI) = promedioCursoCFI$ID
 promedioCursoCFI = promedioCursoCFI[, c("Cursos", "Promedio")]
@@ -75,6 +89,11 @@ save(promedioCursoCFI, file = "KMeans/Data/promedioCursoCFI.RData")
 pdf("KMeans/Plots/PromedioCFI.pdf", width=30, height=50)
 grid.arrange(graficakPromCFI, nClustersPromCFI, nrow = 2)
 dev.off()
+
+str(promedioCursoCFI)
+TEMP <- as.data.frame(promedioCursoCFI)
+str(TEMP)
+save(TEMP, file = "KMeans/Data/promedioCursoCFI.rda")
 
 #-----------------
 
@@ -89,6 +108,11 @@ pdf("KMeans/Plots/PromedioEspecifico.pdf", width=30, height=50)
 grid.arrange(graficakPromEspecifico, nClustersPromEspecifico, nrow = 2)
 dev.off()
 
+str(promedioCursoEspecifico)
+TEMP <- as.data.frame(promedioCursoEspecifico)
+str(TEMP)
+save(TEMP, file = "KMeans/Data/promedioCursoEspecifico.rda")
+
 promedioCursoNumerico = read.csv("ProjectData/promedioCursoNumerico.csv", header = TRUE)
 row.names(promedioCursoNumerico) = promedioCursoNumerico$ID
 promedioCursoNumerico = promedioCursoNumerico[, c("Cursos", "Promedio")]
@@ -99,6 +123,11 @@ save(promedioCursoNumerico, file = "KMeans/Data/promedioCursoNumerico.RData")
 pdf("KMeans/Plots/PromedioNumerico.pdf", width=30, height=50)
 grid.arrange(graficakPromNumerico, nClustersPromNumerico, nrow = 2)
 dev.off()
+
+str(promedioCursoNumerico)
+TEMP <- as.data.frame(promedioCursoNumerico)
+str(TEMP)
+save(TEMP,  file = "KMeans/Data/promedioCursoNumerico.rda")
 
 promedioCursoProfecionales = read.csv("ProjectData/promedioCursosProfecionales.csv", header = TRUE)
 row.names(promedioCursoProfecionales) = promedioCursoProfecionales$ID
@@ -111,7 +140,10 @@ pdf("KMeans/Plots/PromedioProfecionales.pdf", width=30, height=50)
 grid.arrange(graficakPromProfecionales, nClustersPromProfecionales, nrow = 2)
 dev.off()
 
-
+str(promedioCursoProfecionales)
+TEMP <- as.data.frame(promedioCursoProfecionales)
+str(TEMP)
+save(TEMP, file = "KMeans/Data/promedioCursoProfecionales.rda")
 
 
 
