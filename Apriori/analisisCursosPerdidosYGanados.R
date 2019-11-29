@@ -1,0 +1,7 @@
+setwd("C:/Users/Abraham/Desktop/Proyecto2Analisis")
+source('Apriori/cursosGanadosEstudiantes.R', local = TRUE)
+source('Apriori/cursosBasicosGanados.R')
+source('Apriori/cursosPerdidosEstudiantes.R')
+source('Apriori/cursosPerdidosCiclo.R')
+source('Apriori/cursosBasicosPerdidosCiclo.R')
+source('Apriori/cursosBasicosPerdidosEstudiantes.R')

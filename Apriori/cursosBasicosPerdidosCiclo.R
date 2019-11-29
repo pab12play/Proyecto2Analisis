@@ -28,7 +28,7 @@ setwd("C:/Users/Abraham/Desktop/Proyecto2Analisis") #comentar y agregar sus ruta
 # leemos el CSV como transacciones
 # estas transacciones se realizan en base a
 # USUARIO y CURSOS 
-transacciones <- read.transactions("ProjectData/DataSets/cursosNumericosGanados.csv", rm.duplicates = FALSE,format="single",sep=",", header = TRUE,cols=c('ID', 'Nombre_Curso'))
+transacciones <- read.transactions("ProjectData/DataSets/cursosNumericosPerdidos.csv", rm.duplicates = FALSE,format="single",sep=",", header = TRUE,cols=c('Nombre_Curso', 'Nombre_Ciclo'))
 summary(transacciones)
 
 
@@ -48,55 +48,54 @@ xx <- rownames(frecuencia_items)
 yy <- frecuencia_items$frecuencia_items
 
 #grafica de la frecuencia
-frecuenciaImage <-  ggplot(data = frecuencia_items, aes(x = reorder(xx, yy), y = yy))   + 
-  geom_bar( position = "dodge" ,stat="identity", size=0.5 ) + 
-  coord_flip() +
-  geom_hline(yintercept = 0, alpha = 1, color="black", size=0.5) +
-  geom_vline(xintercept = 0, alpha = 1, color="black", size=0.5) +
-  labs(title = "Distribución de cursos ganados",x = 'Cursos', y = 'Cantidad de Estudiantes') #+ theme(axis.text.x = element_text(angle = 90))
-
-
+frecuenciaImage <-  ggplot(data = frecuencia_items, aes(x = reorder(xx, -yy),y = yy))   + 
+                    geom_bar( stat="identity" ) + 
+                    geom_hline(yintercept = 0, alpha = 1, color="black", size=0.5) +
+                    geom_vline(xintercept = 0, alpha = 1, color="black", size=0.5) +
+                    labs(title = "Distribución de cursos perdidos por ciclo", y = 'Estudiantes') +
+                    theme(axis.text.x = element_text(angle = 90))
+  
 #distribucion de cursos perdidos
 frecuencia_items <- itemFrequency(x = transacciones, type = "absolute")
 distribucion <- quantile(frecuencia_items, probs = seq(0,1,0.10))
 distribucion <- as.data.frame(distribucion)
 distribucionImage <- ggplot(distribucion) + aes(x =  seq(0,1,0.1), y = distribucion) +
-  geom_line( size = 0.5, color='coral' ) + geom_col( width = 0.05, alpha = 0.3) + 
-  scale_y_continuous(breaks=round(distribucion), labels = round(distribucion)) +
-  geom_hline(yintercept = 0, alpha = 1, color="black", size=0.5) +
-  geom_vline(xintercept = 0, alpha = 1, color="black", size=0.5) +
-  labs(title = "Proporción de cursos ganados",
-       x = "Proporción", y = 'Ganados')
+                      geom_line( size = 0.5, color='coral' ) + geom_col( width = 0.05, alpha = 0.3) + 
+                      scale_y_continuous(breaks=round(distribucion), labels = round(distribucion)) +
+                      geom_hline(yintercept = 0, alpha = 1, color="black", size=0.5) +
+                      geom_vline(xintercept = 0, alpha = 1, color="black", size=0.5) +
+                      labs(title = "Proporción de cursos perdidos",
+                           x = "Proporción", y = 'Cursos Perdidos')
 
 #carguemos algunas reglas
-soporte <- 0.3
-confianza <- 0.90
+soporte <- 0.01
+confianza <- 0.65
 
-reglas <- apriori(transacciones,parameter=list(sup=soporte,conf=confianza,target="rules", maxlen=3))
+reglas <- apriori(transacciones,parameter=list(sup=soporte,conf=confianza,target="rules", maxlen=5))
 
 reglas_ordenadas_confidence = sort(x=reglas, decreasing = TRUE, by = "confidence")
 reglas_ordenadas_lift = sort(x=reglas, decreasing = TRUE, by = "lift")
 #plot (reglas, method = "two-key plot")
 
-inspect(reglas_ordenadas_lift[0:25])
+inspect(reglas_ordenadas_lift[0:10])
 
 
 #guardamos los datos leidos
-save(transacciones, file = "Apriori/Data/cursosBasicosGanadosEstudiantes.RData")
+save(transacciones, file = "Apriori/Data/cursosPerdidosCiclos.RData")
 
 #guardamos las reglas calculadas
-save(reglas, file = paste0("Apriori/Data/cursosBasicosGanadosEstudiantes_Soporte-",(soporte),"_Confianza-",(confianza),".RData"))
+save(reglas, file = paste0("Apriori/Data/cursosPerdidosCiclosReglas_Soporte-",(soporte),"_Confianza-",(confianza),".RData"))
 
 #guardar imagenes
-jpeg("Apriori/Plots/cursosBasicosGanadosEstudiantesTransacciones.jpg", width=800, height=800)
+jpeg("Apriori/Plots/cursosPerdidosCiclosTransacciones.jpg", width=800, height=800)
 transaccionesImage
 dev.off()
 
-jpeg("Apriori/Plots/cursosBasicosGanadosEstudiantesFrecuencias.jpg", width=900, height=600)
+jpeg("Apriori/Plots/cursosPerdidosCiclosFrecuencias.jpg", width=900, height=600)
 frecuenciaImage
 dev.off()
 
-jpeg("Apriori/Plots/cursosBasicosGanadosEstudiantesDistribuciones.jpg", width=800, height=800)
+jpeg("Apriori/Plots/cursosPerdidosCiclosDistribuciones.jpg", width=800, height=800)
 distribucionImage
 dev.off()
 
