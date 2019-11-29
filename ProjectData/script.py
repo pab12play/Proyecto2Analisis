@@ -33,7 +33,11 @@ for index1, row in df.iterrows():
         continue
 
     df2['ID'] = row['ID']
-    
+
+    #frequencia = df2['Nota'].value_counts()
+    #if("A" in frequencia.index.tolist()):
+    #    print(frequencia["A"])
+
     mergedDf = df.merge(df2)
     mergedDf = mergedDf.drop(mergedDf[mergedDf.Nombre_Curso.str.contains('INGLES', na=False)].index) #ELIMINA INGLES
     mergedDf = mergedDf.dropna(subset=['Nota']) #ELIMINA NOTAS VACIAS
@@ -53,6 +57,17 @@ for index1, row in df.iterrows():
     cursosGanados = cursosGanados.append(mergedDf.loc[mergedDf.Nota.astype(int) >= 65])
     cursosPerdidos = cursosPerdidos.append(mergedDf.loc[mergedDf.Nota.astype(int) < 65])
     cursosPerdidos = cursosPerdidos.drop_duplicates(subset=['ID', 'No_curso'])
+
+    copia = df2.copy()
+    copia = copia.dropna(subset=['Nota']) #ELIMINA NOTAS VACIAS
+    copia = copia.drop(copia[copia.Nota.astype(str).str.contains('A', na=False)].index) #ELIMINA NOTAS INVALIDAD
+    copia = copia.drop(copia[copia.Nota.astype(str).str.contains('E', na=False)].index) #ELIMINA NOTAS INVALIDAD
+    copia = copia.drop(copia[copia.Nota.astype(str).str.contains('R', na=False)].index) #ELIMINA NOTAS INVALIDAD
+    idx = copia.groupby(['No_curso'])['No_tip_examen'].transform(max) == copia['No_tip_examen']
+    cursosPerdidosRaw = copia[idx].loc[copia[idx].Nota.astype(int) < 65]
+    conteoCursosPerdidos = pd.DataFrame({"ID":[row['ID']],"Conteo_cursos_perdidos":[len(cursosPerdidosRaw.index)]})
+    conteoCursosPerdidos = conteoCursosPerdidos.append(df.merge(conteoCursosPerdidos))
+
     cursosCompletos = cursosCompletos.append(mergedDf)
     
 if not os.path.exists('DataSets/'):
@@ -64,6 +79,7 @@ cursosEspecificos.to_csv('DataSets/cursosEspecificos.csv', index=False)
 cursosProfesionales.to_csv('DataSets/cursosProfesionales.csv', index=False)
 cursosGanados.to_csv('DataSets/cursosGanados.csv', index=False)
 cursosPerdidos.to_csv('DataSets/cursosPerdidos.csv', index=False)
+conteoCursosPerdidos.to_csv('DataSets/conteoCursosPerdidos.csv', index=False)
 cursosCompletos.to_csv('DataSets/cursosCompletos.csv', index=False)
 
 
