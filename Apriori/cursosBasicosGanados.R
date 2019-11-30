@@ -28,9 +28,18 @@ setwd("C:/Users/Abraham/Desktop/Proyecto2Analisis") #comentar y agregar sus ruta
 # leemos el CSV como transacciones
 # estas transacciones se realizan en base a
 # USUARIO y CURSOS 
-transacciones <- read.transactions("ProjectData/DataSets/cursosNumericosGanados.csv", rm.duplicates = FALSE,format="single",sep=",", header = TRUE,cols=c('ID', 'Nombre_Curso'))
-summary(transacciones)
 
+
+datos <- read.csv("ProjectData/DataSets/cursosNumericosGanados.csv", header = TRUE)
+#datosF <- cbind(datos$ID, paste(sep = ' - ', datos$ID, datos$Nombre_Curso))
+datosF <- data.frame(ID = datos$ID , item = datos$Nombre_Curso)
+
+dir.create(path = "tmp", showWarnings = FALSE)
+
+write.csv(datosF, "./tmp/tall_transactions.csv")
+
+transacciones <- read.transactions(file = "./tmp/tall_transactions.csv",format = "single", header = TRUE, rm.duplicates = FALSE, sep = ",", cols=c("ID","item"))
+summary(transacciones)
 
 
 # lista de todos los cursos de los que se tiene registro que al menos un usuario ha reprobado
@@ -49,11 +58,11 @@ yy <- frecuencia_items$frecuencia_items
 
 #grafica de la frecuencia
 frecuenciaImage <-  ggplot(data = frecuencia_items, aes(x = reorder(xx, yy), y = yy))   + 
-  geom_bar( position = "dodge" ,stat="identity", size=0.5 ) + 
-  coord_flip() +
-  geom_hline(yintercept = 0, alpha = 1, color="black", size=0.5) +
-  geom_vline(xintercept = 0, alpha = 1, color="black", size=0.5) +
-  labs(title = "Distribución de cursos ganados",x = 'Cursos', y = 'Cantidad de Estudiantes') #+ theme(axis.text.x = element_text(angle = 90))
+                    geom_bar( position = "dodge" ,stat="identity", size=0.5 ) + 
+                    coord_flip() +
+                    geom_hline(yintercept = 0, alpha = 1, color="black", size=0.5) +
+                    geom_vline(xintercept = 0, alpha = 1, color="black", size=0.5) +
+                    labs(title = "Distribución de cursos ganados",x = 'Cursos', y = 'Cantidad de Estudiantes') #+ theme(axis.text.x = element_text(angle = 90))
 
 
 #distribucion de cursos perdidos

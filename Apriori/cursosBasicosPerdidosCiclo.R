@@ -27,8 +27,18 @@ setwd("C:/Users/Abraham/Desktop/Proyecto2Analisis") #comentar y agregar sus ruta
 
 # leemos el CSV como transacciones
 # estas transacciones se realizan en base a
-# USUARIO y CURSOS 
-transacciones <- read.transactions("ProjectData/DataSets/cursosNumericosPerdidos.csv", rm.duplicates = FALSE,format="single",sep=",", header = TRUE,cols=c('Nombre_Curso', 'Nombre_Ciclo'))
+# USUARIO y CURSOS
+
+
+datos <- read.csv("ProjectData/DataSets/cursosNumericosPerdidos.csv", header = TRUE)
+#datosF <- cbind(datos$ID, paste(sep = ' - ', datos$ID, datos$Nombre_Curso))
+datosF <- data.frame(ID = datos$No_ciclo , item = paste(sep = '- ', datos$Nombre_Ciclo, datos$Nombre_Curso))
+
+dir.create(path = "tmp", showWarnings = FALSE)
+
+write.csv(datosF, "./tmp/tall_transactions.csv")
+
+transacciones <- read.transactions(file = "./tmp/tall_transactions.csv",format = "single", header = TRUE, rm.duplicates = FALSE, sep = ",", cols=c("ID","item"))
 summary(transacciones)
 
 
@@ -48,8 +58,9 @@ xx <- rownames(frecuencia_items)
 yy <- frecuencia_items$frecuencia_items
 
 #grafica de la frecuencia
-frecuenciaImage <-  ggplot(data = frecuencia_items, aes(x = reorder(xx, -yy),y = yy))   + 
+frecuenciaImage <-  ggplot(data = frecuencia_items, aes(x = reorder(xx, yy),y = yy))   + 
                     geom_bar( stat="identity" ) + 
+                    coord_flip() +
                     geom_hline(yintercept = 0, alpha = 1, color="black", size=0.5) +
                     geom_vline(xintercept = 0, alpha = 1, color="black", size=0.5) +
                     labs(title = "Distribución de cursos perdidos por ciclo", y = 'Estudiantes') +
@@ -68,8 +79,8 @@ distribucionImage <- ggplot(distribucion) + aes(x =  seq(0,1,0.1), y = distribuc
                            x = "Proporción", y = 'Cursos Perdidos')
 
 #carguemos algunas reglas
-soporte <- 0.01
-confianza <- 0.65
+soporte <- 0.1
+confianza <- 0.75
 
 reglas <- apriori(transacciones,parameter=list(sup=soporte,conf=confianza,target="rules", maxlen=5))
 

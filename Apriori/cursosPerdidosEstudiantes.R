@@ -25,7 +25,16 @@ setwd("C:/Users/Abraham/Desktop/Proyecto2Analisis") #comentar y agregar sus ruta
 # leemos el CSV como transacciones
 # estas transacciones se realizan en base a
 # USUARIO y CURSOS 
-transacciones <- read.transactions("ProjectData/DataSets/cursosPerdidos.csv", rm.duplicates = FALSE,format="single",sep=",", header = TRUE,cols=c('ID', 'Nombre_Curso'))
+
+datos <- read.csv("ProjectData/DataSets/cursosPerdidos.csv", header = TRUE)
+#datosF <- cbind(datos$ID, paste(sep = ' - ', datos$ID, datos$Nombre_Curso))
+datosF <- data.frame(ID = datos$ID , item = datos$Nombre_Curso)
+
+dir.create(path = "tmp", showWarnings = FALSE)
+
+write.csv(datosF, "./tmp/tall_transactions.csv")
+
+transacciones <- read.transactions(file = "./tmp/tall_transactions.csv",format = "single", header = TRUE, rm.duplicates = FALSE, sep = ",", cols=c("ID","item"))
 summary(transacciones)
 
 

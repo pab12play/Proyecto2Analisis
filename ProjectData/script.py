@@ -52,9 +52,9 @@ for index1, row in df.iterrows():
     mergedDf = mergedDf.drop(mergedDf[mergedDf.Nota.astype(str).str.contains('R', na=False)].index) #ELIMINA NOTAS INVALIDAD
 
     #cambiar nombre de columnas
-    #mergedDf.loc[mergedDf.Nombre_Ciclo.str.contains('Primer', na=False), 'Nombre_Ciclo'] = 'Primer Ciclo'
-    #mergedDf.loc[mergedDf.Nombre_Ciclo.str.contains('Segundo', na=False),  'Nombre_Ciclo'] = 'Segundo Ciclo'
-    #mergedDf.loc[mergedDf.Nombre_Ciclo.str.contains('Interciclo', na=False),  'Nombre_Ciclo'] = 'Interciclo'
+    mergedDf.loc[mergedDf.Nombre_Ciclo.str.contains('Primer', na=False), 'Nombre_Ciclo'] = 'Primer Ciclo'
+    mergedDf.loc[mergedDf.Nombre_Ciclo.str.contains('Segundo', na=False),  'Nombre_Ciclo'] = 'Segundo Ciclo'
+    mergedDf.loc[mergedDf.Nombre_Ciclo.str.contains('Interciclo', na=False),  'Nombre_Ciclo'] = 'Interciclo'
     mergedDf["Nombre_Curso"] = mergedDf["Nombre_Curso"].astype(str).str.replace("\([0-9]*\)", "")
     mergedDf["Nombre_Curso"] = mergedDf["Nombre_Curso"].astype(str).str.strip()
 

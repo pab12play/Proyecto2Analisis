@@ -28,9 +28,18 @@ setwd("C:/Users/Abraham/Desktop/Proyecto2Analisis") #comentar y agregar sus ruta
 # leemos el CSV como transacciones
 # estas transacciones se realizan en base a
 # USUARIO y CURSOS 
-transacciones <- read.transactions("ProjectData/DataSets/cursosPerdidos.csv", rm.duplicates = FALSE,format="single",sep=",", header = TRUE,cols=c('Nombre_Curso', 'Nombre_Ciclo'))
-summary(transacciones)
 
+
+datos <- read.csv("ProjectData/DataSets/cursosPerdidos.csv", header = TRUE)
+#datosF <- cbind(datos$ID, paste(sep = ' - ', datos$ID, datos$Nombre_Curso))
+datosF <- data.frame(ID = datos$No_ciclo , item = paste(sep = '- ', datos$Nombre_Ciclo, datos$Nombre_Curso))
+
+dir.create(path = "tmp", showWarnings = FALSE)
+
+write.csv(datosF, "./tmp/tall_transactions.csv")
+
+transacciones <- read.transactions(file = "./tmp/tall_transactions.csv",format = "single", header = TRUE, rm.duplicates = FALSE, sep = ",", cols=c("ID","item"))
+summary(transacciones)
 
 
 # lista de todos los cursos de los que se tiene registro que al menos un usuario ha reprobado
@@ -44,12 +53,13 @@ frecuencia_items <- itemFrequency(x = transacciones, type = "absolute")
 frecuencia_items = sort(frecuencia_items, decreasing = TRUE)
 frecuencia_items <- as.data.frame(frecuencia_items)
 
-xx <- rownames(frecuencia_items)
-yy <- frecuencia_items$frecuencia_items
+xx <- rownames(frecuencia_items)[0:10]
+yy <- frecuencia_items$frecuencia_items[0:10]
 
 #grafica de la frecuencia
-frecuenciaImage <-  ggplot(data = frecuencia_items, aes(x = reorder(xx, -yy),y = yy))   + 
+frecuenciaImage <-  ggplot(data = head(frecuencia_items,10), aes(x = reorder(xx, yy),y = yy))   + 
                     geom_bar( stat="identity" ) + 
+                    coord_flip() +
                     geom_hline(yintercept = 0, alpha = 1, color="black", size=0.5) +
                     geom_vline(xintercept = 0, alpha = 1, color="black", size=0.5) +
                     labs(title = "Distribución de cursos perdidos por ciclo", y = 'Estudiantes') +
@@ -69,7 +79,7 @@ distribucionImage <- ggplot(distribucion) + aes(x =  seq(0,1,0.1), y = distribuc
 
 #carguemos algunas reglas
 soporte <- 0.1
-confianza <- 0.95
+confianza <- 0.65
 
 reglas <- apriori(transacciones,parameter=list(sup=soporte,conf=confianza,target="rules", maxlen=3))
 
