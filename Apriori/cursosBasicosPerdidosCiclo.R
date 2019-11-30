@@ -30,9 +30,9 @@ setwd("C:/Users/Abraham/Desktop/Proyecto2Analisis") #comentar y agregar sus ruta
 # USUARIO y CURSOS
 
 
-datos <- read.csv("ProjectData/DataSets/cursosNumericosPerdidos.csv", header = TRUE)
+datos <- read.csv("ProjectData/DataSets/cursosPerdidos.csv", header = TRUE)
 #datosF <- cbind(datos$ID, paste(sep = ' - ', datos$ID, datos$Nombre_Curso))
-datosF <- data.frame(ID = datos$No_ciclo , item = paste(sep = '- ', datos$Nombre_Ciclo, datos$Nombre_Curso))
+datosF <- data.frame(ID = datos$No_ciclo , item = paste(sep = '- ', datos$Nombre_Ciclo, datos$Eje ))
 
 dir.create(path = "tmp", showWarnings = FALSE)
 

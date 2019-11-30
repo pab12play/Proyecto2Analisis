@@ -58,6 +58,15 @@ for index1, row in df.iterrows():
     mergedDf.loc[mergedDf.Nombre_Ciclo.str.contains('Interciclo', na=False),  'Nombre_Ciclo'] = 'Interciclo'
     mergedDf["Nombre_Curso"] = mergedDf["Nombre_Curso"].astype(str).str.replace("\([0-9]*\)", "")
     mergedDf["Nombre_Curso"] = mergedDf["Nombre_Curso"].astype(str).str.strip()
+    mergedDf.loc[mergedDf.Eje.astype(str).str.contains('CIENCIAS BASICAS', na=False), 'Eje'] = 'CIENCIAS BASICAS'
+    mergedDf.loc[mergedDf.Eje.astype(str).str.contains('CIENCAS DE INGENIERIA', na=False),  'Eje'] = 'CIENCAS DE INGENIERIA'
+    mergedDf.loc[mergedDf.Eje.astype(str).str.contains('INGENIERIA', na=False),  'Eje'] = 'CIENCAS DE INGENIERIA'
+    mergedDf.loc[mergedDf.Eje.astype(str).str.contains('COMPUTA', na=False),  'Eje'] = 'CIENCAS DE INGENIERIA'
+    mergedDf.loc[mergedDf.Eje.astype(str).str.contains('PROGRAMA', na=False),  'Eje'] = 'CIENCAS DE INGENIERIA'
+    mergedDf.loc[mergedDf.Eje.astype(str).str.contains('DATOS', na=False),  'Eje'] = 'CIENCAS DE INGENIERIA'
+    mergedDf.loc[mergedDf.Eje.astype(str).str.contains('APLICADA', na=False),  'Eje'] = 'INGENIERIA APLICADA'
+    mergedDf.loc[mergedDf.Eje.astype(str).str.contains('PROFESIONAL', na=False),  'Eje'] = 'PROFESIONAL'
+    mergedDf.loc[mergedDf.Eje.astype(str).str.contains('OTROS', na=False),  'Eje'] = 'OTROS'
 
     cursosCFI = cursosCFI.append(mergedDf.loc[mergedDf.Nombre_Curso.str.contains('(CFI)', na=False)])
     cursosNumericos = cursosNumericos.append(mergedDf.loc[mergedDf.Eje.astype(str).str.contains('CIENCIAS BASICAS', na=False)])
