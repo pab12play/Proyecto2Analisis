@@ -28,6 +28,7 @@ cursosCFI = pd.DataFrame()
 cursosGanados = pd.DataFrame()
 cursosPerdidos = pd.DataFrame()
 cursosCompletos = pd.DataFrame()
+conteoCursosPerdidos = pd.DataFrame()
 
 for index1, row in df.iterrows():
     #leer archivo de notas de cada estudiante
@@ -39,7 +40,7 @@ for index1, row in df.iterrows():
         continue
 
     df2['ID'] = row['ID']
-
+    copia = df2.copy()
     #frequencia = df2['Nota'].value_counts()
     #if("A" in frequencia.index.tolist()):
     #    print(frequencia["A"])
@@ -65,18 +66,17 @@ for index1, row in df.iterrows():
     cursosGanados = cursosGanados.append(mergedDf.loc[mergedDf.Nota.astype(int) >= 65])
     cursosPerdidos = cursosPerdidos.append(mergedDf.loc[mergedDf.Nota.astype(int) < 65])
     cursosPerdidos = cursosPerdidos.drop_duplicates(subset=['ID', 'No_curso'])
+    cursosCompletos = cursosCompletos.append(mergedDf)
 
-    copia = df2.copy()
     copia = copia.dropna(subset=['Nota']) #ELIMINA NOTAS VACIAS
     copia = copia.drop(copia[copia.Nota.astype(str).str.contains('A', na=False)].index) #ELIMINA NOTAS INVALIDAD
     copia = copia.drop(copia[copia.Nota.astype(str).str.contains('E', na=False)].index) #ELIMINA NOTAS INVALIDAD
     copia = copia.drop(copia[copia.Nota.astype(str).str.contains('R', na=False)].index) #ELIMINA NOTAS INVALIDAD
     idx = copia.groupby(['No_curso'])['No_tip_examen'].transform(max) == copia['No_tip_examen']
     cursosPerdidosRaw = copia[idx].loc[copia[idx].Nota.astype(int) < 65]
-    conteoCursosPerdidos = pd.DataFrame({"ID":[row['ID']],"Conteo_cursos_perdidos":[len(cursosPerdidosRaw.index)]})
-    conteoCursosPerdidos = conteoCursosPerdidos.append(df.merge(conteoCursosPerdidos))
-
-    cursosCompletos = cursosCompletos.append(mergedDf)
+    conteoCursosPerdidosTemp = pd.DataFrame({"ID":[row['ID']],"Conteo_cursos_perdidos":[len(cursosPerdidosRaw.index)]})
+    conteoCursosPerdidos = conteoCursosPerdidos.append(df.merge(conteoCursosPerdidosTemp))
+    
 
 
 cursosNumericosGanados = cursosNumericosGanados.append(cursosGanados.loc[cursosGanados.Eje.astype(str).str.contains('CIENCIAS BASICAS', na=False)])  

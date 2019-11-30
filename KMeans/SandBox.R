@@ -10,11 +10,21 @@ library("gridExtra")
 #install.packages("ggplot2")
 library(ggplot2)
 
+#install.packages("tidyverse")
+library(tidyverse)
+
+#install.packages("readr")
+library(readr)
+
 setwd("C:/Users/Abraham/Desktop/Proyecto2Analisis") #comentar y agregar sus rutas
 setwd("D:/Documents/Universidad/Octavo ciclo/ANÁLISIS DE DATOS/Proyecto2/Proyecto2Analisis")
+setwd("/home/akabane/Desktop/Proyecto2Analisis")
 
 # xlsx files
 my_data <- read_excel("ProjectData/ListadoPromedios.xlsx")
+dataCompletos <- read_csv("ProjectData/DataSets/cursosCompletos.csv")
+dataCursosAprobados <- read_excel("ProjectData/ListadoPromedios.xlsx")
+dataCursosPerdidos <- read_csv("ProjectData/DataSets/conteoCursosPerdidos.csv")
 set.seed(23544727)
 
 #Plot de promedio simple por anio
@@ -35,7 +45,7 @@ dev.off()
 #Promedio simple x numero de cursos 
 PromedioSimple = my_data[,c("prom_simp_x_ciclo", "cursos_acumulados")]
 row.names(PromedioSimple) = my_data$ID
-nclustersPromSimp = fviz_nbclust(PromedioSimple, kmeans, method = "wss") + geom_vline(xintercept = 3 ,linetype = 2) + ggtitle("N?mero ?ptimo de clusters")
+nclustersPromSimp = fviz_nbclust(PromedioSimple, kmeans, method = "wss") + geom_vline(xintercept = 3 ,linetype = 2) + ggtitle("Numero optimo de clusters")
 clustersPromSimp = kmeans(PromedioSimple, 3, nstart = 20)
 graficakPromSimp = fviz_cluster(clustersPromSimp, data = PromedioSimple) + ggtitle("Promedio Simple x Numero de cursos") + labs(x = "Promedio simple", y = "Total cursos")
 save(PromedioSimple, file = "KMeans/Data/PromedioSimple.RData")
@@ -43,27 +53,41 @@ pdf("KMeans/Plots/PromedioSimple.pdf", width=30, height=50)
 grid.arrange(graficakPromSimp, nclustersPromSimp, nrow = 2)
 dev.off()
 
+str(PromedioSimple)
+TEMP <- as.data.frame(PromedioSimple)
+str(TEMP)
+save(TEMP, file = "KMeans/Data/PromedioSimple.rda")
 
 PromedioPonderado = my_data[, c("Promedio_Ponderado_Acumulado", "cursos_acumulados")]
 row.names(PromedioPonderado) = my_data$ID
-nclustersPromPond = fviz_nbclust(PromedioPonderado, kmeans, method = "wss") + geom_vline(xintercept = 3, linetype = 2) + ggtitle("N?mero ?ptimo de clusters") 
+nclustersPromPond = fviz_nbclust(PromedioPonderado, kmeans, method = "wss") + geom_vline(xintercept = 3, linetype = 2) + ggtitle("Numero optimo de clusters") 
 clustersPromPond = kmeans(PromedioPonderado, 3, nstart = 100)
-graficakPromPond = fviz_cluster(clustersPromPond, data = PromedioPonderado) + ggtitle("Promedio acomulado x N?meroo de cursos") +  labs(x = "Promedio ponderado", y = "Total cursos")
+graficakPromPond = fviz_cluster(clustersPromPond, data = PromedioPonderado) + ggtitle("Promedio acomulado x Numero de cursos") +  labs(x = "Promedio ponderado", y = "Total cursos")
 save(PromedioPonderado, file = "KMeans/Data/PromedioPonderado.RData")
 pdf("KMeans/Plots/PromedioPond.pdf", width=30, height=50)
 grid.arrange(graficakPromPond, nclustersPromPond, nrow = 2)
 dev.off()
 
+str(PromedioPonderado)
+TEMP <- as.data.frame(PromedioPonderado)
+str(TEMP)
+save(TEMP, file = "KMeans/Data/PromedioPonderado.rda")
+
 PromedioAno = my_data[, c("año", "prom_simp_x_ciclo")]
 PromedioAno$año = as.numeric(as.character(PromedioAno$año))
 row.names(PromedioAno) = my_data$ID
-nClustersPromAno = fviz_nbclust(PromedioAno, kmeans, method = "wss") + geom_vline(xintercept = 3, linetype = 2) + ggtitle("N?mero ?ptimo de clusters")
+nClustersPromAno = fviz_nbclust(PromedioAno, kmeans, method = "wss") + geom_vline(xintercept = 3, linetype = 2) + ggtitle("Numero optimo de clusters")
 clustersPromAno = kmeans(PromedioAno, 3, nstart = 30)
 graficakPromAno = fviz_cluster(clustersPromAno, data = PromedioAno) + ggtitle("Promedio acomulado x A?o (No relevante)") +  labs(x = "Promedio simple", y = "Anio")
 save(PromedioAno, file = "KMeans/Data/PromedioAnio.RData")
 pdf("KMeans/Plots/PromedioAni.pdf", width=30, height=50)
 grid.arrange(graficakPromAno, nClustersPromAno, nrow = 2)
 dev.off()
+
+str(PromedioAno)
+TEMP <- as.data.frame(PromedioAno)
+str(TEMP)
+save(TEMP, file = "KMeans/Data/PromedioAnio.rda")
 
 promedioCursoCFI = read.csv("ProjectData/promedioCursoCFI.csv", header = TRUE)
 row.names(promedioCursoCFI) = promedioCursoCFI$ID
@@ -75,6 +99,11 @@ save(promedioCursoCFI, file = "KMeans/Data/promedioCursoCFI.RData")
 pdf("KMeans/Plots/PromedioCFI.pdf", width=30, height=50)
 grid.arrange(graficakPromCFI, nClustersPromCFI, nrow = 2)
 dev.off()
+
+str(promedioCursoCFI)
+TEMP <- as.data.frame(promedioCursoCFI)
+str(TEMP)
+save(TEMP, file = "KMeans/Data/promedioCursoCFI.rda")
 
 #-----------------
 
@@ -89,6 +118,11 @@ pdf("KMeans/Plots/PromedioEspecifico.pdf", width=30, height=50)
 grid.arrange(graficakPromEspecifico, nClustersPromEspecifico, nrow = 2)
 dev.off()
 
+str(promedioCursoEspecifico)
+TEMP <- as.data.frame(promedioCursoEspecifico)
+str(TEMP)
+save(TEMP, file = "KMeans/Data/promedioCursoEspecifico.rda")
+
 promedioCursoNumerico = read.csv("ProjectData/promedioCursoNumerico.csv", header = TRUE)
 row.names(promedioCursoNumerico) = promedioCursoNumerico$ID
 promedioCursoNumerico = promedioCursoNumerico[, c("Cursos", "Promedio")]
@@ -99,6 +133,11 @@ save(promedioCursoNumerico, file = "KMeans/Data/promedioCursoNumerico.RData")
 pdf("KMeans/Plots/PromedioNumerico.pdf", width=30, height=50)
 grid.arrange(graficakPromNumerico, nClustersPromNumerico, nrow = 2)
 dev.off()
+
+str(promedioCursoNumerico)
+TEMP <- as.data.frame(promedioCursoNumerico)
+str(TEMP)
+save(TEMP,  file = "KMeans/Data/promedioCursoNumerico.rda")
 
 promedioCursoProfecionales = read.csv("ProjectData/promedioCursosProfecionales.csv", header = TRUE)
 row.names(promedioCursoProfecionales) = promedioCursoProfecionales$ID
@@ -111,12 +150,44 @@ pdf("KMeans/Plots/PromedioProfecionales.pdf", width=30, height=50)
 grid.arrange(graficakPromProfecionales, nClustersPromProfecionales, nrow = 2)
 dev.off()
 
+str(promedioCursoProfecionales)
+TEMP <- as.data.frame(promedioCursoProfecionales)
+str(TEMP)
+save(TEMP, file = "KMeans/Data/promedioCursoProfecionales.rda")
 
+#----------
+CursosAprobados = dataCursosAprobados[c("prom_simp_x_ciclo","cursos_x_ciclo","cursos_acumulados")]
+CursosAprobadosScale <- scale(CursosAprobados)
+nClustersCursosAprobados = fviz_nbclust(CursosAprobadosScale, kmeans, method = "wss") + geom_vline(xintercept = 3, linetype = 2) + ggtitle("Numero optimo de clusters")
+clustersCursosAprobados = kmeans(CursosAprobadosScale, 3, nstart = 30)
+graficakCursosAprobados = fviz_cluster(clustersCursosAprobados, data = CursosAprobadosScale) + ggtitle("Similitud en cursos aprobados")
+aggregate(CursosAprobados,by=list(clustersCursosAprobados$cluster),mean)
+save(CursosAprobados, file = "KMeans/Data/CursosAprobados.RData")
+pdf("KMeans/Plots/CursosAprobados.pdf", width=30, height=50)
+grid.arrange(graficakCursosAprobados, nClustersCursosAprobados, nrow = 2)
+dev.off()
 
+CursosPerdidos = dataCursosPerdidos[c("prom_simp_x_ciclo","cursos_x_ciclo","cursos_acumulados","Conteo_cursos_perdidos")]
+CursosPerdidosScale <- scale(CursosPerdidos)
+nClustersCursosPerdidos = fviz_nbclust(CursosPerdidosScale, kmeans, method = "wss") + geom_vline(xintercept = 3, linetype = 2) + ggtitle("Numero optimo de clusters")
+clustersCursosPerdidos = kmeans(CursosPerdidosScale, 3, nstart = 30)
+graficakCursosPerdidos = fviz_cluster(clustersCursosPerdidos, data = CursosPerdidosScale) + ggtitle("Similitud en cursos Perdidos")
+aggregate(CursosPerdidos,by=list(clustersCursosPerdidos$cluster),mean)
+save(CursosPerdidos, file = "KMeans/Data/CursosPerdidos.RData")
+pdf("KMeans/Plots/CursosPerdidos.pdf", width=30, height=50)
+grid.arrange(graficakCursosPerdidos, nClustersCursosPerdidos, nrow = 2)
+dev.off()
 
-
-
-
+porTipoExamen = dataCompletos[c("No_tip_examen","Nota")]
+porTipoExamenScale <- scale(porTipoExamen)
+nClustersTipoExamen = fviz_nbclust(porTipoExamenScale, kmeans, method = "wss") + geom_vline(xintercept = 3, linetype = 2) + ggtitle("Numero optimo de clusters")
+clustersTipoExamen = kmeans(porTipoExamenScale, 3, nstart = 30)
+graficakTipoExamen = fviz_cluster(clustersTipoExamen, data = porTipoExamenScale) + ggtitle("Similitud por Tipo de Examen")
+aggregate(porTipoExamen,by=list(clustersTipoExamen$cluster),mean)
+save(porTipoExamen, file = "KMeans/Data/porTipoExamen.RData")
+pdf("KMeans/Plots/porTipoExamen.pdf", width=30, height=50)
+grid.arrange(graficakTipoExamen, nClustersTipoExamen, nrow = 2)
+dev.off()
 
 
 
