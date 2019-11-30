@@ -79,8 +79,8 @@ distribucionImage <- ggplot(distribucion) + aes(x =  seq(0,1,0.1), y = distribuc
                            x = "Proporción", y = 'Cursos Perdidos')
 
 #carguemos algunas reglas
-soporte <- 0.1
-confianza <- 0.75
+soporte <- 0.07
+confianza <- 0.85
 
 reglas <- apriori(transacciones,parameter=list(sup=soporte,conf=confianza,target="rules", maxlen=5))
 

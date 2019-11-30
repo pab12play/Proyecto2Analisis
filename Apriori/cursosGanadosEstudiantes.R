@@ -77,7 +77,7 @@ distribucionImage <- ggplot(distribucion) + aes(x =  seq(0,1,0.1), y = distribuc
                            x = "Proporción", y = 'Ganados')
 
 #carguemos algunas reglas
-soporte <- 0.3
+soporte <- 0.1
 confianza <- 0.90
 
 reglas <- apriori(transacciones,parameter=list(sup=soporte,conf=confianza,target="rules", maxlen=3))

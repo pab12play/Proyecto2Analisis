@@ -31,7 +31,6 @@ setwd("C:/Users/Abraham/Desktop/Proyecto2Analisis") #comentar y agregar sus ruta
 
 
 datos <- read.csv("ProjectData/DataSets/cursosNumericosGanados.csv", header = TRUE)
-#datosF <- cbind(datos$ID, paste(sep = ' - ', datos$ID, datos$Nombre_Curso))
 datosF <- data.frame(ID = datos$ID , item = datos$Nombre_Curso)
 
 dir.create(path = "tmp", showWarnings = FALSE)
@@ -62,7 +61,7 @@ frecuenciaImage <-  ggplot(data = frecuencia_items, aes(x = reorder(xx, yy), y =
                     coord_flip() +
                     geom_hline(yintercept = 0, alpha = 1, color="black", size=0.5) +
                     geom_vline(xintercept = 0, alpha = 1, color="black", size=0.5) +
-                    labs(title = "Distribución de cursos ganados",x = 'Cursos', y = 'Cantidad de Estudiantes') #+ theme(axis.text.x = element_text(angle = 90))
+                    labs(title = "Distribuciï¿½n de cursos ganados",x = 'Cursos', y = 'Cantidad de Estudiantes') #+ theme(axis.text.x = element_text(angle = 90))
 
 
 #distribucion de cursos perdidos
@@ -74,8 +73,8 @@ distribucionImage <- ggplot(distribucion) + aes(x =  seq(0,1,0.1), y = distribuc
   scale_y_continuous(breaks=round(distribucion), labels = round(distribucion)) +
   geom_hline(yintercept = 0, alpha = 1, color="black", size=0.5) +
   geom_vline(xintercept = 0, alpha = 1, color="black", size=0.5) +
-  labs(title = "Proporción de cursos ganados",
-       x = "Proporción", y = 'Ganados')
+  labs(title = "Proporciï¿½n de cursos ganados",
+       x = "Proporciï¿½n", y = 'Ganados')
 
 #carguemos algunas reglas
 soporte <- 0.3
